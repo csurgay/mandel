@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mandelbrot</title>
+    </head>
+    <body>
+        <canvas id="mandel" width="1400" height="1000"></canvas>
+        <script>
+            class Complex {
+                constructor(a,b) {
+                    this.a=a;
+                    this.b=b;
+                    return this;
+                }
+                plus(c) {
+                    return new Complex(this.a+c.a,this.b+c.b);
+                }
+                square() {
+                    return new Complex(this.a*this.a-this.b*this.b,2*this.a*this.b);
+                }
+                length() {
+                    return this.a*this.a+this.b*this.b;
+                }
+            }
+            const canvas=document.getElementById("mandel");
+            const ctx=canvas.getContext("2d");
+            for (let x=-2.0; x<0.5; x+=0.001) {
+                for (let y=-1.4; y<1.4; y+=0.001) {
+                    const c=new Complex(x,y);
+                    let z=new Complex(0,0);
+                    for (let i=0; i<150; i++) {
+                        z=z.square().plus(c);
+                        if (z.length()>10000000) {
+                            break;
+                        }
+                    }
+                    if (z.length()<10000000) {
+                        ctx.beginPath();
+                        ctx.fillStyle="#000";
+                        ctx.fillRect(1000+500*x,500+500*y,1,1);
+                        ctx.fill();
+                    }
+                }
+            }
+            ctx.beginPath();
+            ctx.strokeStyle="#000";
+            ctx.rect(0,0,1400,1000);
+            ctx.stroke();
+        </script>
+    </body>
+</html>
