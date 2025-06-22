@@ -26,8 +26,8 @@
             const ctx=canvas.getContext("2d");
             const dx=canvas.width, dy=canvas.height;
             let wx1=-2.0, wx2=0.5, wy1=-1.3, wy2=1.3;
-            let cx=-0.5009922407458042, cy=-0.52248;
-            let step=25;
+            let cx=-0.5009922556371084, cy=-0.52248;
+            let step=32;
             setTimeout(drawFrame,10);
 
             function xtrans(x,y) {
@@ -39,26 +39,27 @@
             }
 
             function drawFrame() {
-                ctx.beginPath();
                 ctx.clearRect(0, 0, dx, dy);
-                ctx.fillStyle="#000";
                 const wxs=(wx2-wx1)/dx, wys=(wy2-wy1)/dy;
                 for (let x=wx1; x<wx2; x+=wxs) {
                     for (let y=wy1; y<wy2; y+=wys) {
                         const c=new Complex(x,y);
                         let z=new Complex(0,0);
-                        for (let i=0; i<150; i++) {
+                        let color="rgb(0,0,0)";
+                        for (let i=0; i<216; i++) {
                             z=z.square().plus(c);
-                            if (z.length()>10000000) {
+                            if (z.length()>1000000) {
+                                let colorv=255*Math.cbrt(i)/6;
+                                color="rgb(0,0,"+colorv+")";
                                 break;
                             }
                         }
-                        if (z.length()<10000000) {
-                            ctx.fillRect(xtrans(x,y),ytrans(x,y),1,1);
-                        }
+                        ctx.beginPath();
+                        ctx.fillStyle=color;
+                        ctx.fillRect(xtrans(x,y),ytrans(x,y),1,1);
+                        ctx.fill();
                     }
                 }
-                ctx.fill();
                 ctx.beginPath();
                 ctx.strokeStyle="#000";
                 ctx.rect(0,0,dx,dy);
