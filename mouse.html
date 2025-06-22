@@ -25,6 +25,7 @@
             const canvas=document.getElementById("mandel");
             let img=new Image();
             const ctx=canvas.getContext("2d");
+            //ctx.translate(0.5,0.5);
             const dx=canvas.width, dy=canvas.height;
             let mx,my;
             canvas.addEventListener("mousemove", mousemove, false);            
@@ -33,8 +34,8 @@
             let wx1=-2.0, wx2=0.5, wy1=-1.3, wy2=1.3; // window
             let fx1=wx1,fy1=wy1,fx2=wx2,fy2=wy2; // red frame 
             let cx=-0.5009922556371084, cy=-0.52248;
-            iterations=1250;
-            threshold=1000000000;
+            iterations=1500;
+            threshold=10;
             drawMandel();
 
             function mousemove(evt) {
@@ -75,20 +76,13 @@
                 return y*(wy2-wy1)/dy+wy1;
             }
 
-            function drawFrame() {
-                ctx.beginPath();
-                ctx.strokeStyle="#F00";
-                let fx=xtrans(fx1);
-                let fy=ytrans(fy1);
-                ctx.rect(fx,fy,xtrans(fx2)-fx,ytrans(fy2)-fy);
-                ctx.stroke();
-            }
-
             function drawFramedMandel() {
                 let fx=xtrans(fx1), fy=ytrans(fy1);
-                ctx.drawImage(img,fx,fy,
+//                img.onload=function() {
+                    ctx.drawImage(img,fx,fy,
                     xtrans(fx2)-fx,ytrans(fy2)-fy,
                     0,0,dx,dy);
+//                }
             }
 
             function drawDot() {
@@ -109,9 +103,10 @@
                         let color="rgb(0,0,0)";
                         for (let i=0; i<iterations; i++) {
                             z=z.square().plus(c);
-                            if (z.length()>100) {
-                                let colorv=255*Math.log(Math.log(i))/Math.log(Math.log(iterations));
-                                color="rgb(0,0,"+colorv+")";
+                            if (z.length()>threshold) {
+                                let colorv=255*Math.log(i)/Math.log(iterations);
+                                if (colorv>255) colorv>255;
+                                color="rgb("+colorv+","+colorv+","+colorv+")";
                                 break;
                             }
                         }
@@ -122,6 +117,10 @@
                     }
                 }
                 img.src=canvas.toDataURL();
+            }
+
+            function wait4img() {
+
             }
         </script>
     </body>
